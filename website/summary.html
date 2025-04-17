@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Summary ({{ period }})</h2>
+<p>Total Income: {{ income }}</p>
+<p>Total Expenses: {{ expenses }}</p>
+<h3>Expenses by Category</h3>
+<ul>
+    {% for category, amount in categories.items() %}
+    <li>{{ category }}: {{ amount }}</li>
+    {% endfor %}
+</ul>
+<a href="{{ url_for('summary', period='weekly') }}">Weekly</a>
+<a href="{{ url_for('summary', period='monthly') }}">Monthly</a>
+{% endblock %}
