@@ -1,8 +1,60 @@
-from flask import render_template, redirect, url_for, flash, request
-from flask_login import login_user, logout_user, login_required, current_user
-from models import User, Transaction
-from app import app, db
+from flask import Flask, render_template, redirect, url_for, flash, request
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
+
+app = Flask(__name__, template_folder='website') 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///your_database.db'  # Replace with actual URI!
+app.config['SECRET_KEY'] = 'your_secret_key'  # Important for Flask-Login(?)
+
+db = SQLAlchemy()
+db.init_app(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'  # Where to redirect if not logged in
+
+
+# User Model (Important: Must inherit from UserMixin)
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password_hash = db.Column(db.String(120), nullable=False)
+    transactions = db.relationship('Transaction', backref='user', lazy=True)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def __repr__(self):
+        return f'<User {self.username}>'
+
+
+# Transaction Model
+class Transaction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    category = db.Column(db.String(80), nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    type = db.Column(db.String(20), nullable=False)  # 'income' or 'expense'
+
+    def __repr__(self):
+        return f'<Transaction {self.amount} {self.category} {self.date}>'
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+@app.route('/')
+def home():
+    return "Hello, Flask!"
+
 
 # Registration
 @app.route('/register', methods=['GET', 'POST'])
@@ -24,6 +76,7 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html')
 
+
 # Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -40,12 +93,14 @@ def login():
         return redirect(url_for('login'))
     return render_template('login.html')
 
+
 # Logout
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
 
 # Dashboard
 @app.route('/dashboard')
@@ -54,6 +109,7 @@ def dashboard():
     transactions = Transaction.query.filter_by(user_id=current_user.id).order_by(Transaction.date.desc()).limit(10).all()
     balance = sum(t.amount if t.type == 'income' else -t.amount for t in Transaction.query.filter_by(user_id=current_user.id).all())
     return render_template('dashboard.html', transactions=transactions, balance=balance)
+
 
 # Add Transaction
 @app.route('/add_transaction', methods=['GET', 'POST'])
@@ -71,6 +127,7 @@ def add_transaction():
         return redirect(url_for('dashboard'))
     return render_template('add_transaction.html')
 
+
 # View Transactions
 @app.route('/transactions', methods=['GET', 'POST'])
 @login_required
@@ -86,6 +143,7 @@ def transactions():
             query = query.filter(Transaction.date.between(start_date, end_date))
     transactions = query.order_by(Transaction.date.desc()).all()
     return render_template('transactions.html', transactions=transactions)
+
 
 # Update Transaction
 @app.route('/update_transaction/<int:transaction_id>', methods=['GET', 'POST'])
@@ -105,6 +163,7 @@ def update_transaction(transaction_id):
         return redirect(url_for('transactions'))
     return render_template('update_transaction.html', transaction=transaction)
 
+
 # Delete Transaction
 @app.route('/delete_transaction/<int:transaction_id>')
 @login_required
@@ -117,6 +176,7 @@ def delete_transaction(transaction_id):
     db.session.commit()
     flash('Transaction deleted successfully')
     return redirect(url_for('transactions'))
+
 
 # Summary
 @app.route('/summary')
@@ -134,3 +194,9 @@ def summary():
         if t.type == 'expense':
             categories[t.category] = categories.get(t.category, 0) + t.amount
     return render_template('summary.html', income=income, expenses=expenses, categories=categories, period=period)
+
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
