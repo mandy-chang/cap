@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Transactions</h2>
+<form method="post">
+    <input type="text" name="search" placeholder="Search by category or type">
+    <button type="submit">Search</button>
+</form>
+<form method="post">
+    <label for="start_date">Start Date:</label>
+    <input type="date" id="start_date" name="start_date">
+    <label for="end_date">End Date:</label>
+    <input type="date" id="end_date" name="end_date">
+    <button type="submit" name="filter_date">Filter by Date</button>
+</form>
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Category</th>
+        <th>Amount</th>
+        <th>Type</th>
+        <th>Actions</th>
+    </tr>
+    {% for transaction in transactions %}
+    <tr>
+        <td>{{ transaction.date }}</td>
+        <td>{{ transaction.category }}</td>
+        <td>{{ transaction.amount }}</td>
+        <td>{{ transaction.type }}</td>
+        <td>
+            <a href="{{ url_for('update_transaction', transaction_id=transaction.id) }}">Edit</a>
+            <a href="{{ url_for('delete_transaction', transaction_id=transaction.id) }}" onclick="return confirm('Are you sure?')">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
