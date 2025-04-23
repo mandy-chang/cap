@@ -100,7 +100,7 @@ describe('AppComponent', () => {
   it(`should set proper title`, waitForAsync(() => {
     const fixture = TestBed.createComponent(AppComponent);
     const titleService = TestBed.inject(Title);
-    expect(titleService.getTitle()).toEqual('Road To FIRE');
+    expect(titleService.getTitle()).toEqual('BudgetU');
   }));
 
   it('should navigate to wizard page when storage wiped', fakeAsync(() => {

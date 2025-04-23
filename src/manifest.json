@@ -8,12 +8,12 @@
   "scope": "/",
   "start_url": "/?utm_source=homescreen",
   "icons": [  {
-    "src": "/assets/img/favicon_192.png",
+    "src": "/assets/img/BudgetU2.png",
     "type": "image/png",
     "sizes": "192x192"
   },
   {
-    "src": "/assets/img/favicon_512.png",
+    "src": "/assets/img/BudgetU2.png",
     "type": "image/png",
     "sizes": "512x512"
   }]
