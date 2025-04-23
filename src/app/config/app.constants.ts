@@ -10,7 +10,7 @@ export interface SymbolDetails {
 }
 
 export const APP_CONSTS = {
-  TITLE: 'Road To FIRE',
+  TITLE: 'BudgetU',
   VERSION: '1.5.0',    
   // text to show when user first loads the current new version
   WHATS_NEW_TITLE: `What's new in version 1.5.0`,
