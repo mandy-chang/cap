@@ -1,0 +1,10 @@
+.list-item {
+  max-width: 100%;
+
+}
+
+.truncate-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 6px;
+}
