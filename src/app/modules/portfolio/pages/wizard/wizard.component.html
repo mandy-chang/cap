@@ -13,14 +13,17 @@
       <mat-step label="Welcome">
         <p>BudgetU let's you keep track of your financial assets. It's aimed at passive investors, that
           don't
-          need to know how they're assets are doing in real-time. Because your privacy is important, all data is saved
+          need to know how their assets are doing in real-time. Because your privacy is important, all data is saved
           on
           your device or your cloud storage account. No data about your portfolio is sent to us (other than asset
           symbols,
           in order to get their current price).</p>
         <p>Let's go through some steps to setup the basic configuration for the app. If you are already familiar with
           the
-          app, you can skip this wizard.</p>
+          app, you can skip this wizard.
+          
+          BudgetU has features to keep track of, Stock, Bond, Cash, Crypto, Real Estate and more. Start with our interactive and easy to use UI and ask our AI assistant for help!
+        </p>
         <div fxLayout="row" fxLayoutAlign="end">
           <button type="button" mat-raised-button matStepperNext color="primary">Next</button>
         </div>
@@ -128,7 +131,7 @@
           </div>
         </form>
       </mat-step>
-      <mat-step label="FIRE" [stepControl]="fireForm">
+      <mat-step label="BUDGET" [stepControl]="fireForm">
         <form [formGroup]="fireForm" (ngSubmit)="onWizardDone()" fxLayout="column">
           <mat-form-field>
             <input matInput type="number" placeholder="Financial Independence Goal" formControlName="fireNumber" min="0"
