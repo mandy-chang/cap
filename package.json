@@ -2,13 +2,10 @@
   "name": "BudgetU",
   "description": "Keep track of your financial assets",
   "author": "",
-  "homepage": "https://github.com/iLiviu/road-to-fire#readme",
+  "homepage": "https://github.com/mandy-chang/cap#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/iLiviu/road-to-fire"
-  },
-  "bugs": {
-    "url": "https://github.com/iLiviu/road-to-fire/issues"
+    "url": "https://github.com/mandy-chang/cap"
   },
   "license": "GPL-3.0-or-later",
   "version": "1.5.0",
@@ -20,7 +17,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build-stats": "ng build --stats-json",
-    "bundle-report": "webpack-bundle-analyzer dist/RoadToFIRE/stats.json"
+    "bundle-report": "webpack-bundle-analyzer dist/BudgetU/stats.json"
   },
   "private": true,
   "dependencies": {
